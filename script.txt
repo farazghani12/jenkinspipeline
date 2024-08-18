@@ -1,0 +1,44 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Checkout') {
+            steps {
+                // Checkout the code from the version control system
+                git url: 'https://your-repo-url.git', branch: 'main'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                // In this case, build can be just a chmod to make the script executable
+                sh 'chmod +x cal.sh'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                // Run some basic tests by invoking the script with predefined inputs
+                sh '''
+                echo "Running Tests..."
+                echo "Test 1: Addition"
+                echo -e "1\n2\n1\n" | ./cal.sh
+                echo "Test 2: Subtraction"
+                echo -e "5\n3\n2\n" | ./cal.sh
+                echo "Test 3: Multiplication"
+                echo -e "3\n4\n3\n" | ./cal.sh
+                echo "Test 4: Division"
+                echo -e "8\n2\n4\n" | ./cal.sh
+                '''
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                // For demonstration, deployment might be moving the script to a specific location
+                sh 'cp cal.sh /usr/local/bin/cal'
+                echo 'Calculator deployed successfully!'
+            }
+        }
+    }
+}
